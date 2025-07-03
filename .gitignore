@@ -1,0 +1,37 @@
+# Binaries for programs and plugins
+*.exe
+*.dll
+*.so
+*.dylib
+*.wasm
+*.bin
+
+# Test binaries
+*_test
+
+# Output of `go build`
+# Ignore object files and compiled binaries (including those in subdirectories)
+**/*.o
+**/*.exe
+**/*.bin
+
+# Go module cache and build cache
+.go/
+go.mod.sum
+go.sum
+
+# IDE/Editor specific files
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+.DS_Store
+Thumbs.db
+
+# Environment variables files
+.env
+
+# miscellaneous
+cmd/
+docs/
+*.txt
