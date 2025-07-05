@@ -196,11 +196,6 @@ func (s *Scalar) RenderDocs(writer io.Writer) error {
 	return nil
 }
 
-// GetConfig returns a copy of the current configuration
-func (s *Scalar) GetConfig() Config {
-	return s.config
-}
-
 // loadSpecFromFile loads specification content from a file
 func loadSpecFromFile(filePath string) (string, error) {
 	fileURL, err := normalizeFileURL(filePath)
@@ -421,7 +416,7 @@ func (b *Builder) Build() (*Scalar, error) {
 	return NewScalar(b.options...)
 }
 
-// Convenience functions
+// Miscellaneous
 
 // FromFile creates a Scalar instance from a file path
 func FromFile(filePath string, options ...Option) (*Scalar, error) {
