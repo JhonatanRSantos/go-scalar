@@ -1,15 +1,14 @@
 # Go Scalar
 
-A Go API documentation generator that uses Scalar to create elegant and interactive documentation interfaces from OpenAPI/Swagger specifications.
+A Go API documentation generator that uses [Scalar](https://github.com/scalar/scalar) to create elegant and interactive documentation interfaces from OpenAPI/Swagger specifications.
 
 ## Features
 
-- ✨ Modern and responsive interface using Scalar
+- ✨ Modern and responsive interface using [Scalar](https://github.com/scalar/scalar)
 - 📁 Support for loading specifications from local files
 - 🌐 Support for loading specifications via HTTP/HTTPS
-- 📊 Integration with `swag.Spec` (Swagger Go)
+- 📊 Integration with `swag.Spec` [Swag](https://github.com/swaggo/swag)
 - 🔧 Flexible configuration with builder pattern
-- 🌍 Multi-language support
 - ⚡ Embedded templates for simple distribution
 
 ## Installation
@@ -31,13 +30,11 @@ import (
 )
 
 func main() {
-    // Create Scalar instance from a file
     scalar, err := goscalar.FromFile("./docs/swagger.json")
     if err != nil {
         panic(err)
     }
 
-    // Render documentation to stdout
     if err := scalar.RenderDocs(os.Stdout); err != nil {
         panic(err)
     }
@@ -55,13 +52,11 @@ import (
 )
 
 func main() {
-    // Load specification from a URL
-    scalar, err := goscalar.FromURL("https://api.example.com/swagger.json")
+    scalar, err := goscalar.FromURL("https://cdn.jsdelivr.net/npm/@scalar/galaxy/dist/latest.json")
     if err != nil {
         panic(err)
     }
 
-    // Render documentation
     if err := scalar.RenderDocs(os.Stdout); err != nil {
         panic(err)
     }
@@ -80,7 +75,6 @@ import (
 )
 
 func main() {
-    // Assuming you have a swag specification
     spec := &swag.Spec{
         // your specification here
     }
@@ -111,16 +105,14 @@ import (
 )
 
 func main() {
-    // Custom HTTP client
     client := &http.Client{
         Timeout: 60 * time.Second,
     }
 
-    // Use builder for advanced configuration
     scalar, err := goscalar.NewBuilder().
         Title("My API Documentation").
         Language("en-US").
-        URL("https://api.example.com/swagger.json").
+        URL("https://cdn.jsdelivr.net/npm/@scalar/galaxy/dist/latest.json").
         HTTPClient(client).
         Build()
 
@@ -146,10 +138,11 @@ import (
 
 func main() {
     scalar, err := goscalar.NewScalar(
-        goscalar.WithTitle("Products API"),
-        goscalar.WithLanguage("en-US"),
-        goscalar.WithFile("./api-spec.json"),
-    )
+		goscalar.WithTitle("My API Documentation"),
+		goscalar.WithLanguage("en-US"),
+		goscalar.WithURL("https://cdn.jsdelivr.net/npm/@scalar/galaxy/dist/latest.json"),
+		goscalar.WithHTTPClient(client),
+	)
 
     if err != nil {
         panic(err)
@@ -176,14 +169,11 @@ import (
 func main() {
     r := gin.Default()
 
-    // Create Scalar instance
-    scalar, err := goscalar.FromFile("./docs/swagger.json", 
-        goscalar.WithTitle("My API"))
+    scalar, err := goscalar.FromFile("./docs/swagger.json", goscalar.WithTitle("My API Documentation"))
     if err != nil {
         panic(err)
     }
 
-    // Documentation endpoint
     r.GET("/docs", func(c *gin.Context) {
         c.Header("Content-Type", "text/html")
         if err := scalar.RenderDocs(c.Writer); err != nil {
@@ -192,6 +182,37 @@ func main() {
     })
 
     r.Run(":8080")
+}
+```
+
+### Fiber Framework
+
+```go
+package main
+
+import (
+	"github.com/JhonatanRSantos/goscalar"
+	"github.com/gofiber/fiber/v2"
+)
+
+func main() {
+	app := fiber.New()
+	scalar, err := goscalar.FromSpec(docs.SwaggerInfo, goscalar.WithTitle("My API Documentation"))
+	if err != nil {
+		panic(err)
+	}
+
+	app.Get("/docs", func(c *fiber.Ctx) error {
+		if err := scalar.RenderDocs(c.Response().BodyWriter()); err != nil {
+			return c.Status(fiber.StatusInternalServerError).SendString("Error rendering docs: " + err.Error())
+		}
+		c.Response().Header.Set("Content-Type", "text/html; charset=utf-8")
+		c.Response().Header.Set("Cache-Control", "no-cache, no-store, must-revalidate")
+		c.Response().Header.Set("Pragma", "no-cache")
+		c.Response().Header.Set("Expires", "0")
+		return nil
+	})
+	app.Listen(":8080")
 }
 ```
 
@@ -207,7 +228,7 @@ import (
 )
 
 func main() {
-    scalar, err := goscalar.FromURL("https://petstore.swagger.io/v2/swagger.json")
+    scalar, err := goscalar.FromURL("https://cdn.jsdelivr.net/npm/@scalar/galaxy/dist/latest.json")
     if err != nil {
         log.Fatal(err)
     }
@@ -247,8 +268,7 @@ scalar, err := goscalar.FromURL("https://api.example.com/swagger.json")
 
 // With custom HTTP client
 client := &http.Client{Timeout: 30 * time.Second}
-scalar, err := goscalar.FromURL("https://api.example.com/swagger.json", 
-    goscalar.WithHTTPClient(client))
+scalar, err := goscalar.FromURL("https://api.example.com/swagger.json", goscalar.WithHTTPClient(client))
 ```
 
 ### 3. Direct Content
@@ -304,140 +324,6 @@ if err != nil {
     }
 }
 ```
-
-## Complete Examples
-
-### Example with Middleware
-
-```go
-package main
-
-import (
-    "github.com/gin-gonic/gin"
-    "github.com/JhonatanRSantos/goscalar"
-)
-
-func ScalarMiddleware(filePath string) gin.HandlerFunc {
-    scalar, err := goscalar.FromFile(filePath,
-        goscalar.WithTitle("My API"),
-        goscalar.WithLanguage("en-US"))
-    
-    if err != nil {
-        panic(err)
-    }
-
-    return func(c *gin.Context) {
-        c.Header("Content-Type", "text/html")
-        if err := scalar.RenderDocs(c.Writer); err != nil {
-            c.JSON(500, gin.H{"error": err.Error()})
-        }
-    }
-}
-
-func main() {
-    r := gin.Default()
-    r.GET("/docs", ScalarMiddleware("./swagger.json"))
-    r.Run(":8080")
-}
-```
-
-### Example with Custom Configuration
-
-```go
-package main
-
-import (
-    "net/http"
-    "time"
-    "github.com/gorilla/mux"
-    "github.com/JhonatanRSantos/goscalar"
-)
-
-func main() {
-    // Custom HTTP client with longer timeout
-    client := &http.Client{
-        Timeout: 2 * time.Minute,
-    }
-
-    // Create scalar with multiple configurations
-    scalar, err := goscalar.NewBuilder().
-        Title("Enterprise API Documentation").
-        Language("en-US").
-        URL("https://internal-api.company.com/swagger.json").
-        HTTPClient(client).
-        Build()
-
-    if err != nil {
-        panic(err)
-    }
-
-    r := mux.NewRouter()
-    r.HandleFunc("/docs", func(w http.ResponseWriter, r *http.Request) {
-        w.Header().Set("Content-Type", "text/html; charset=utf-8")
-        w.Header().Set("Cache-Control", "no-cache")
-        
-        if err := scalar.RenderDocs(w); err != nil {
-            http.Error(w, "Failed to render documentation", http.StatusInternalServerError)
-        }
-    })
-
-    http.ListenAndServe(":8080", r)
-}
-```
-
-### Example with Environment Configuration
-
-```go
-package main
-
-import (
-    "os"
-    "github.com/gin-gonic/gin"
-    "github.com/JhonatanRSantos/goscalar"
-)
-
-func main() {
-    // Get configuration from environment variables
-    specPath := os.Getenv("SWAGGER_SPEC_PATH")
-    if specPath == "" {
-        specPath = "./docs/swagger.json"
-    }
-
-    title := os.Getenv("API_TITLE")
-    if title == "" {
-        title = "API Documentation"
-    }
-
-    language := os.Getenv("API_LANGUAGE")
-    if language == "" {
-        language = "en-US"
-    }
-
-    scalar, err := goscalar.FromFile(specPath,
-        goscalar.WithTitle(title),
-        goscalar.WithLanguage(language))
-    
-    if err != nil {
-        panic(err)
-    }
-
-    r := gin.Default()
-    r.GET("/docs", func(c *gin.Context) {
-        c.Header("Content-Type", "text/html")
-        if err := scalar.RenderDocs(c.Writer); err != nil {
-            c.JSON(500, gin.H{"error": err.Error()})
-        }
-    })
-
-    port := os.Getenv("PORT")
-    if port == "" {
-        port = "8080"
-    }
-
-    r.Run(":" + port)
-}
-```
-
 ## Requirements
 
 - Go 1.18+
