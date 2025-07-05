@@ -17,7 +17,7 @@ import (
 
 	"github.com/swaggo/swag"
 
-	"github.com/JhonatanRSantos/go-scalar/utils"
+	"github.com/JhonatanRSantos/goscalar/utils"
 )
 
 const (
