@@ -11,6 +11,8 @@ A Go API documentation generator that uses [Scalar](https://github.com/scalar/sc
 - 🔧 Flexible configuration with builder pattern
 - ⚡ Embedded templates for simple distribution
 
+![usage](https://github.com/user-attachments/assets/fe9e7ee8-acce-4ac0-a693-08c04ed67e2a)
+
 ## Installation
 
 ```bash
