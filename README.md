@@ -15,7 +15,7 @@ A Go API documentation generator that uses Scalar to create elegant and interact
 ## Installation
 
 ```bash
-go get github.com/JhonatanRSantos/go-scalar
+go get github.com/JhonatanRSantos/goscalar
 ```
 
 ## Basic Usage
@@ -27,7 +27,7 @@ package main
 
 import (
     "os"
-    "github.com/JhonatanRSantos/go-scalar"
+    "github.com/JhonatanRSantos/goscalar"
 )
 
 func main() {
@@ -51,7 +51,7 @@ package main
 
 import (
     "os"
-    "github.com/JhonatanRSantos/go-scalar"
+    "github.com/JhonatanRSantos/goscalar"
 )
 
 func main() {
@@ -75,7 +75,7 @@ package main
 
 import (
     "os"
-    "github.com/JhonatanRSantos/go-scalar"
+    "github.com/JhonatanRSantos/goscalar"
     "github.com/swaggo/swag"
 )
 
@@ -107,7 +107,7 @@ import (
     "net/http"
     "os"
     "time"
-    "github.com/JhonatanRSantos/go-scalar"
+    "github.com/JhonatanRSantos/goscalar"
 )
 
 func main() {
@@ -141,7 +141,7 @@ package main
 
 import (
     "os"
-    "github.com/JhonatanRSantos/go-scalar"
+    "github.com/JhonatanRSantos/goscalar"
 )
 
 func main() {
@@ -170,7 +170,7 @@ package main
 
 import (
     "github.com/gin-gonic/gin"
-    "github.com/JhonatanRSantos/go-scalar"
+    "github.com/JhonatanRSantos/goscalar"
 )
 
 func main() {
@@ -203,7 +203,7 @@ package main
 import (
     "net/http"
     "log"
-    "github.com/JhonatanRSantos/go-scalar"
+    "github.com/JhonatanRSantos/goscalar"
 )
 
 func main() {
@@ -314,7 +314,7 @@ package main
 
 import (
     "github.com/gin-gonic/gin"
-    "github.com/JhonatanRSantos/go-scalar"
+    "github.com/JhonatanRSantos/goscalar"
 )
 
 func ScalarMiddleware(filePath string) gin.HandlerFunc {
@@ -350,7 +350,7 @@ import (
     "net/http"
     "time"
     "github.com/gorilla/mux"
-    "github.com/JhonatanRSantos/go-scalar"
+    "github.com/JhonatanRSantos/goscalar"
 )
 
 func main() {
@@ -393,7 +393,7 @@ package main
 import (
     "os"
     "github.com/gin-gonic/gin"
-    "github.com/JhonatanRSantos/go-scalar"
+    "github.com/JhonatanRSantos/goscalar"
 )
 
 func main() {
